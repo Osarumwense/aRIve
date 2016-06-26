@@ -28,14 +28,27 @@ public class RootController {
     @Autowired
     private SendService sendService;
 
+    public String dest;
+    public String busID;
+    public String busNumber;
+
     @RequestMapping(value = "/index.html", method = RequestMethod.GET)
 
     public ModelAndView handleRootGetRequest(HttpServletRequest request) throws Exception {
         //logger.debug( "Called" );
-        String dest = request.getParameter("destination");
-        String busID = request.getParameter("busNumber");
+        busID = request.getParameter("busID");
+        dest = request.getParameter("dest");
+        busNumber = request.getParameter("busNumber");
+
         ModelAndView mav = new ModelAndView();
-        mav.setViewName( "index" );
+        if(busID != null)
+        {
+            mav.setViewName("redirect:/getit");
+        }
+        else
+        {
+            mav.setViewName( "index" );
+        }
 
 
 
@@ -53,19 +66,21 @@ public class RootController {
                 continue;
             }
             prev = System.currentTimeMillis();
-            String address = "finch station ontario";
+            String address = dest;
             String urlAddress = address.replaceAll(" ", "+");
 
             String apiKey = "AIzaSyDBrmaanE39Yss7TR5QLnDKa8X4vNwjxPM";
             double[] destPos = ttcService.executeDestGet("https://maps.googleapis.com/maps/api/geocode/xml?address=" + urlAddress + "&key=" + apiKey);
-            double[] busPos = ttcService.executeGet("http://webservices.nextbus.com/service/publicXMLFeed?command=vehicleLocations&a=ttc&r=53&t=0", "1774");
+            double[] busPos = ttcService.executeGet("http://webservices.nextbus.com/service/publicXMLFeed?command=vehicleLocations&a=ttc&r="+busNumber+"&t=0", busID);
             System.out.println(distance(busPos,destPos));
             if (distance(busPos,destPos)<300){
                 far = false;
             }
         }
+        sendService.sendSms();
 
         System.out.println("done");
+
         return null;
     }
 
@@ -81,8 +96,6 @@ public class RootController {
     @RequestMapping(value = "/hello", method = RequestMethod.GET)
     private void handleSendPostRequest(HttpServletRequest request) throws Exception {
 
-        String dest = request.getParameter("destination");
-        String busID = request.getParameter("busNumber");
 
         sendService.sendSms();
         sendService.receiveSms();

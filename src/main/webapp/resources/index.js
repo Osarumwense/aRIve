@@ -7,9 +7,10 @@ $(document).ready(function () {
 });
 
 function login() {
-// var dest = $('#dest').val();
-    var dest = "hello";
+var dest = $('#dest').val();
+//     var dest = "hello";
 var busID = $('#bus').val();
+    var busNumber = $('#busNumber').val();
 var formData = {destination:dest,busNumber:busID};
 
 $.ajax({
@@ -17,7 +18,8 @@ $.ajax({
     type: "POST",
     data : {
         destination: dest,
-        busNumber: busID
+        busID: busID,
+        busNumber: busNumber
     },
     success: function(data, textStatus, jqXHR)
     {

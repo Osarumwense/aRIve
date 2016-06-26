@@ -8,8 +8,10 @@
 <script src="${resourcesPath}/resources/index.js"></script>
 
 <form>
-    BUS ID: <br><input id="bus" type="text" name="busId"><br>
+    BUS ID: <br><input id="busID" type="text" name="busID"><br>
     DESTINATION:  <br><input id="dest"type="text" name="dest"><br>
+    BUS Numver:  <br><input id="busNumber"type="text" name="busNumber"><br>
+
     <input id="submit" type="submit" value="Submit" >
 </form>
 
