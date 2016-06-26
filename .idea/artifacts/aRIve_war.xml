@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="aRIve:war">
+    <output-path>$PROJECT_DIR$/target</output-path>
+    <root id="archive" name="aRIve-1.0-SNAPSHOT.war">
+      <element id="artifact" artifact-name="aRIve:war exploded" />
+    </root>
+  </artifact>
+</component>

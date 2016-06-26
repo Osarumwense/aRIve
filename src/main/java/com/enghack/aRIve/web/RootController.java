@@ -33,6 +33,11 @@ public class RootController {
     public String handleHomeGetRequest() throws Exception {
         //logger.debug( "Called" );
 
+        String address="";
+        String urlAddress = address.replaceAll(" ","+");
+
+        String apiKey="AIzaSyDBrmaanE39Yss7TR5QLnDKa8X4vNwjxPM";
+        String geo = ttcService.executeGet("https://maps.googleapis.com/maps/api/geocode/xml?address="+urlAddress+"&key="+apiKey);
         String x = ttcService.executeGet("http://webservices.nextbus.com/service/publicXMLFeed?command=vehicleLocations&a=ttc&r=53&t=0");
 
         return x;
