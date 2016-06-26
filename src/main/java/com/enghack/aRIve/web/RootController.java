@@ -36,11 +36,11 @@ public class RootController {
     public double[] handleHomeGetRequest() throws Exception {
         //logger.debug( "Called" );
 
-        String address="";
+        String address="finch station ontario";
         String urlAddress = address.replaceAll(" ","+");
 
         String apiKey="AIzaSyDBrmaanE39Yss7TR5QLnDKa8X4vNwjxPM";
-//        String geo = ttcService.executeGet("https://maps.googleapis.com/maps/api/geocode/xml?address="+urlAddress+"&key="+apiKey);
+        double[] geo = ttcService.executeDestGet("https://maps.googleapis.com/maps/api/geocode/xml?address="+urlAddress+"&key="+apiKey);
         double[] x = ttcService.executeGet("http://webservices.nextbus.com/service/publicXMLFeed?command=vehicleLocations&a=ttc&r=300&t=0", "8053");
 
         return x;
