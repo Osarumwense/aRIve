@@ -35,14 +35,35 @@ public class RootController {
     @RequestMapping(value = "/getit", method = RequestMethod.GET)
     public double[] handleHomeGetRequest() throws Exception {
         //logger.debug( "Called" );
+        long prev = System.currentTimeMillis();
+        boolean far = true;
+        while (far) {
+            if (System.currentTimeMillis()-prev<3000){
+                continue;
+            }
+            prev = System.currentTimeMillis();
+            String address = "finch station ontario";
+            String urlAddress = address.replaceAll(" ", "+");
 
-        String address="finch station ontario";
-        String urlAddress = address.replaceAll(" ","+");
+            String apiKey = "AIzaSyDBrmaanE39Yss7TR5QLnDKa8X4vNwjxPM";
+            double[] destPos = ttcService.executeDestGet("https://maps.googleapis.com/maps/api/geocode/xml?address=" + urlAddress + "&key=" + apiKey);
+            double[] busPos = ttcService.executeGet("http://webservices.nextbus.com/service/publicXMLFeed?command=vehicleLocations&a=ttc&r=53&t=0", "1774");
+            System.out.println(distance(busPos,destPos));
+            if (distance(busPos,destPos)<300){
+                far = false;
+            }
+        }
 
-        String apiKey="AIzaSyDBrmaanE39Yss7TR5QLnDKa8X4vNwjxPM";
-        double[] geo = ttcService.executeDestGet("https://maps.googleapis.com/maps/api/geocode/xml?address="+urlAddress+"&key="+apiKey);
-        double[] x = ttcService.executeGet("http://webservices.nextbus.com/service/publicXMLFeed?command=vehicleLocations&a=ttc&r=300&t=0", "8053");
+        System.out.println("done");
+        return null;
+    }
 
-        return x;
+    private double distance(double[] busPos, double[] destPos){
+        double dlon = (busPos[0]-destPos[0])*0.01745329252;
+        double dlat = (busPos[1]-destPos[1])*0.01745329252;
+        double a = Math.pow(Math.sin(dlat/2),2.0)+Math.cos(busPos[0]*0.01745329252)*Math.cos(destPos[0]*0.01745329252)*Math.pow(Math.sin(dlon/2),2.0);
+        double c = 2* Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
+        double d = 6373000 * c;
+        return d;
     }
 }
